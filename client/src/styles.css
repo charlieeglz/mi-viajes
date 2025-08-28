@@ -1,0 +1,265 @@
+/* Reset básico y tipografía */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background-color: #0f2c44;
+  color: #fdfdfd;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  margin-top: 10 px;
+  align-items: flex-start;
+}
+
+/* Barra superior con botones */
+.top-bar {
+  width: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: inherit;
+  z-index: 1000;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* opcional */
+}
+
+/* Botones superiores */
+.btn-theme,
+.btn-logout {
+  background-color: #2f80ed;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+.btn-theme:hover,
+.btn-logout:hover {
+  background-color: #1c6dd0;
+}
+
+/* Sidebar de filtros */
+.sidebar {
+  flex: 0 0 300px;
+  background: #14324d;
+  border: 2px solid #2f80ed;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  padding: 1rem;
+  margin-left: 3rem;
+}
+.sidebar h2 {
+  margin-top: 0;
+  color: #2f80ed;
+}
+.sidebar label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  gap: 1rem;
+}
+.sidebar input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+.sidebar input[type="range"] {
+  width: 100%;
+  accent-color: #2f80ed;
+}
+.sidebar .value {
+  text-align: right;
+  color: #2f80ed;
+  margin-top: 0.25rem;
+}
+.sidebar button {
+  width: 100%;
+  background: #2f80ed;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+.sidebar button:hover {
+  background: #1e6fe0;
+}
+
+/* Área de resultados */
+.content {
+  flex: 1;
+}
+.content h2 {
+  color: #2f80ed;
+  margin-top: 0;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.card-grid p {
+  color: #f5f0e1;
+}
+
+/* Tarjetas */
+.card {
+  background-color: #14324d;
+  border: 2px solid #2f80ed;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  color: #fff;
+}
+.card p {
+  color: #f0f0f0;
+}
+.card a.btn-search-flight {
+  color: #2f80ed;
+  font-weight: bold;
+  text-decoration: none;
+}
+.card a.btn-search-flight:hover {
+  text-decoration: underline;
+}
+
+/* Formularios */
+.login-form,
+.register-form {
+  max-width: 400px;
+  margin: 5rem auto;
+  padding: 2rem;
+  background-color: #14324d;
+  border: 2px solid #2f80ed;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  color: white;
+}
+.login-form h2,
+.register-form h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+.login-form label,
+.register-form label {
+  display: block;
+  margin-bottom: 1rem;
+}
+.login-form input,
+.register-form input {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #f7f3e8;
+  color: #14324d;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.btn-submit,
+.register-form button {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background: #2f80ed;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-submit:hover,
+.register-form button:hover {
+  background: #1e6fe0;
+}
+
+/* Imagen de país */
+.country-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+/* Texto pequeño y errores */
+.text-small {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #f5f0e1;
+}
+.error-text {
+  color: #f00;
+  margin-bottom: 1rem;
+}
+
+/* Modo claro */
+body.light-mode {
+  background-color: #f9f9f9;
+  color: #111;
+}
+body.light-mode .sidebar,
+body.light-mode .card,
+body.light-mode .register-form,
+body.light-mode .login-form {
+  background: #ffffff;
+  color: #111;
+  border-color: #ccc;
+}
+body.light-mode .card p {
+  color: #333;
+}
+body.light-mode .btn-search,
+body.light-mode .btn-submit,
+body.light-mode .register-form button,
+body.light-mode .btn-logout {
+  background: #2f80ed;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  .sidebar {
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .top-bar {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+}
