@@ -167,8 +167,10 @@ app.get("/api/search", requireAuth, async (req, res) => {
   const baseIndex = 5;
 
   // Determinar si es temporada alta o baja según el mes
-  const month = Number(selectedMonth); // 0 = enero, 11 = diciembre
-  const isHighSeason = [6, 7, 11].includes(month); // julio, agosto, diciembre
+  console.log("Mes seleccionado:", selectedMonth);
+  const month = parseInt(selectedMonth); // Esto da 0 para enero, 1 para febrero...
+  const highSeasonMonths = [6, 7, 11]; // julio, agosto, diciembre
+  const isHighSeason = highSeasonMonths.includes(month);
 
   const results = [];
 
@@ -185,7 +187,7 @@ app.get("/api/search", requireAuth, async (req, res) => {
       ? indexMap[dest.country] / baseIndex
       : 1;
 
-    let lodgingPerDay = 100 * costFactor * 1.1 + 20;
+    let lodgingPerDay = 100 * costFactor * 1.1 + 50; // 50€ base + ajuste por coste de vida
 
     // Aplicar lógica de temporada
     if (isHighSeason) {
@@ -201,6 +203,8 @@ app.get("/api/search", requireAuth, async (req, res) => {
     const maxCost = transportCost + lodgingMax;
     const avgCost = (minCost + maxCost) / 2;
     const avgDays = (Number(daysMin) + Number(daysMax)) / 2;
+
+    if (maxCost > Number(budget)) continue;
 
     results.push({
       id: dest.id,

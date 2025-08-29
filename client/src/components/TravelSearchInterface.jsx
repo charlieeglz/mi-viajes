@@ -197,12 +197,12 @@ export default function TravelSearchInterface() {
             Mes de salida
             <select
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+              onChange={(e) => setSelectedMonth(e.target.value)}
               required
             >
               <option value="">—</option>
               {Array.from({ length: 12 }, (_, i) => (
-                <option key={i} value={i}>
+                <option key={i} value={i.toString()}>
                   {new Date(0, i).toLocaleString("es-ES", { month: "long" })}
                 </option>
               ))}
