@@ -5,7 +5,7 @@ const db = require("../db"); // subir un nivel para encontrar db.js
 
 // Registro
 router.post("/register", async (req, res) => {
-  console.log("🔔 LLegó POST /api/auth/register, body=", req.body);
+  console.log("LLegó POST /api/auth/register, body=", req.body);
   const { email, password } = req.body;
   const hash = await bcrypt.hash(password, 10);
   const [result] = await db.query(
@@ -18,7 +18,7 @@ router.post("/register", async (req, res) => {
 
 // Login
 router.post("/login", async (req, res) => {
-  console.log("🔔 LLegó POST /api/auth/login, body=", req.body);
+  console.log(" LLegó POST /api/auth/login, body=", req.body);
   const { email, password } = req.body;
   const [rows] = await db.query(
     "SELECT id, password_hash FROM users WHERE email = ?",
@@ -26,7 +26,7 @@ router.post("/login", async (req, res) => {
   );
   const user = rows[0];
   if (!user) {
-    console.log("❌ Login: usuario no encontrado");
+    console.log(" Login: usuario no encontrado");
     return res.status(401).send({ error: "Credenciales inválidas" });
   }
 
@@ -60,7 +60,7 @@ function requireAuth(req, res, next) {
 
 // Perfil protegido
 router.get("/profile", requireAuth, async (req, res) => {
-  console.log("🔔 LLegó GET /api/auth/profile, cookies=", req.headers.cookie);
+  console.log(" LLegó GET /api/auth/profile, cookies=", req.headers.cookie);
 
   const [rows] = await db.query("SELECT id, email FROM users WHERE id = ?", [
     req.session.userId,

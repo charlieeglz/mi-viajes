@@ -87,16 +87,77 @@ export default function TravelSearchInterface() {
   const fetchCountryImage = async (countryName) => {
     if (countryImages[countryName]) return;
 
-    try {
+    const trySearch = async (query) => {
       const res = await fetch(
         `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(
-          countryName
+          query
         )}&image_type=photo&category=places&safesearch=true&per_page=3`
       );
       const data = await res.json();
-      const imageUrl = data.hits?.[0]?.webformatURL;
+      return data?.hits?.[0]?.webformatURL || null;
+    };
+
+    try {
+      let imageUrl = await trySearch(countryName);
+
+      const fallbackMap = {
+        "EE.UU.": "USA",
+        "Reino Unido": "United Kingdom",
+        "Países Bajos": "Netherlands",
+        Chequia: "Czech Republic",
+        San_Marino: "San Marino",
+        "Ciudad del Vaticano": "Vatican City",
+        Mónaco: "Monaco",
+        Alemania: "Germany",
+        Italia: "Italy",
+        España: "Spain",
+        Francia: "France",
+        Portugal: "Portugal",
+        Japón: "Japan",
+        Austria: "Austria",
+        Bélgica: "Belgium",
+        Bulgaria: "Bulgaria",
+        Croacia: "Croatia",
+        Dinamarca: "Denmark",
+        Estonia: "Estonia",
+        Finlandia: "Finland",
+        Grecia: "Greece",
+        Hungría: "Hungary",
+        Irlanda: "Ireland",
+        Islandia: "Iceland",
+        Letonia: "Latvia",
+        Lituania: "Lithuania",
+        Luxemburgo: "Luxembourg",
+        Malta: "Malta",
+        Moldavia: "Moldova",
+        Montenegro: "Montenegro",
+        Noruega: "Norway",
+        Polonia: "Poland",
+        Rumanía: "Romania",
+        Rusia: "Russia",
+        Serbia: "Serbia",
+        Eslovaquia: "Slovakia",
+        Eslovenia: "Slovenia",
+        Suecia: "Sweden",
+        Suiza: "Switzerland",
+        Ucrania: "Ukraine",
+        Andorra: "Andorra",
+        "Macedonia del Norte": "North Macedonia",
+        Albania: "Albania",
+        Vaticano: "Vatican City",
+      };
+
+      if (!imageUrl && fallbackMap[countryName]) {
+        imageUrl = await trySearch(fallbackMap[countryName]);
+      }
+      if (!imageUrl) {
+        imageUrl = await trySearch("europe travel landscape");
+      }
+
       if (imageUrl) {
         setCountryImages((prev) => ({ ...prev, [countryName]: imageUrl }));
+      } else {
+        console.warn(`No se encontró imagen para ${countryName}`);
       }
     } catch (err) {
       console.error(`Error al buscar imagen para ${countryName}:`, err);
@@ -243,7 +304,6 @@ export default function TravelSearchInterface() {
                   const destCode = cityCodeMap[dest.name];
                   if (!originCode || !destCode) return null;
 
-                  // fetch image if needed
                   if (!countryImages[dest.country]) {
                     fetchCountryImage(dest.country);
                   }

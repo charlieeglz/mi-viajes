@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+MiViajes es una aplicación web que permite a los usuarios encontrar destinos de viaje que se ajusten a su presupuesto, disponibilidad de días y preferencias. Utiliza datos económicos reales, como el índice Big Mac, para estimar costes de viaje, e integra un buscador visual con sugerencias de vuelos a través de Skyscanner.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Características
 
-## Available Scripts
+- Búsqueda personalizada de destinos basada en:
 
-In the project directory, you can run:
+  - Ciudad de origen
 
-### `npm start`
+  - Presupuesto disponible
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+  - Rango de días disponibles
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+  - Mes de salida
 
-### `npm test`
+- Cálculo realista de costes utilizando:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  - Índice Big Mac para estimar coste de vida
 
-### `npm run build`
+  - Distancias reales mediante fórmula de Haversine
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  - Variación de precios según temporada alta o baja
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  - Visualización con imágenes dinámicas de los países (Pixabay API)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  - Enlace directo a Skyscanner para búsqueda de vuelos
 
-### `npm run eject`
+  - Modo claro y oscuro disponible
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  - Interfaz adaptable a dispositivos móviles
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Tecnologías utilizadas
+  Frontend Backend Base de Datos Otros servicios
+  React Node.js (Express) PostgreSQL (Sequelize ORM) API de Skyscanner, API de Pixabay
+  CSS personalizado Autenticación con JWT Seeders dinámicos Fórmula de Haversine para distancias
+  Estructura del proyecto
+  .
+  ├── client/ # Aplicación React
+  ├── server/ # Backend con Express
+  │ ├── models/ # Modelos Sequelize
+  │ ├── routes/ # Rutas de la API
+  │ ├── utils/ # Lógica de cálculo (Haversine, etc.)
+  │ └── seed/ # Archivos para poblar la base de datos
+  ├── public/ # Archivos estáticos
+  ├── .env # Variables de entorno
+  ├── README.md
+  └── package.json
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Instalación y ejecución local
+  Requisitos
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Node.js (v18 o superior)
 
-## Learn More
+PostgreSQL
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Clave API de Pixabay
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+(Opcional) Clave API de Skyscanner
 
-### Code Splitting
+Pasos
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Clonar el repositorio
 
-### Analyzing the Bundle Size
+git clone https://github.com/charlieeglz/mi-viajes
+cd mi-viajes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Instalar dependencias
 
-### Making a Progressive Web App
+# Backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+cd server
+npm install
 
-### Advanced Configuration
+# Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+cd ../client
+npm install
 
-### Deployment
+Configurar el archivo .env en la carpeta server con las variables necesarias
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+DATABASE_URL=postgres://usuario:contraseña@localhost:5432/nombre_bd
+PIXABAY_API_KEY=tu_api_key
 
-### `npm run build` fails to minify
+Poblar la base de datos con los datos iniciales
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+node seed/seedDestinations.js
+node seed/seedCostIndex.js
+
+Ejecutar el proyecto
+
+# Backend
+
+cd server
+npm run dev
+
+# Frontend
+
+cd ../client
+npm start
+
+Mejoras previstas
+
+Posibilidad de guardar destinos favoritos
+
+Nuevos filtros por tipo de viaje, clima o idioma
+
+Autenticación OAuth
+
+Traducción de la interfaz a varios idiomas
+
+Autor
+
+Carlos González Portela
+Este proyecto forma parte de mi portfolio personal como desarrollador full-stack.

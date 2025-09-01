@@ -1,4 +1,3 @@
-// seedBigMac.js
 require("dotenv").config();
 const { Sequelize, DataTypes } = require("sequelize");
 
@@ -16,7 +15,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 
   try {
     await sequelize.authenticate();
-    console.log("🔌 Conectado a la BD");
+    console.log("Conectado a la BD");
 
     const CountryCostIndex = sequelize.define(
       "CountryCostIndex",
@@ -77,9 +76,9 @@ const { Sequelize, DataTypes } = require("sequelize");
       { country: "EE.UU.", bigMacIndex: 5.66 },
     ]);
 
-    console.log("✔ CountryCostIndex poblada con éxito");
+    console.log("CountryCostIndex poblada con éxito");
   } catch (err) {
-    console.error("❌ Error en seedBigMac:", err);
+    console.error("Error en seedBigMac:", err);
   } finally {
     await sequelize.close();
     process.exit();

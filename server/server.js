@@ -4,9 +4,9 @@ const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 const { Sequelize, DataTypes } = require("sequelize");
-const db = require("./db"); // conexión MySQL directa
-const coordinates = require("./utils/coordinates"); // nuevo
-const haversine = require("./utils/haversine"); // nuevo
+const db = require("./db");
+const coordinates = require("./utils/coordinates");
+const haversine = require("./utils/haversine");
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -17,7 +17,7 @@ const requireAuth = (req, res, next) => {
   res.status(401).send({ error: "No autorizado" });
 };
 
-// --- Middleware
+// Middleware
 app.use(
   cors({
     origin: "http://localhost:5003",
@@ -40,10 +40,10 @@ app.use(
   })
 );
 
-// --- Rutas
+// Rutas
 app.use("/api/auth", authRoutes);
 
-// --- Conexión Sequelize
+// Conexión Sequelize
 const sequelize = new Sequelize(
   process.env.DB_NAME,
   process.env.DB_USER,
@@ -55,7 +55,7 @@ const sequelize = new Sequelize(
   }
 );
 
-// --- Modelos
+// Modelos
 const Destination = sequelize.define(
   "Destination",
   {
@@ -90,7 +90,7 @@ const User = sequelize.define(
   }
 );
 
-// --- Sincronizar
+// Sincronizar
 sequelize
   .sync()
   .then(() => {
@@ -99,7 +99,7 @@ sequelize
   })
   .catch((err) => console.error("Error sincronizando BD:", err));
 
-// --- Rutas adicionales
+// Rutas adicionales
 app.post("/api/auth/register", async (req, res) => {
   const { email, password } = req.body;
   const hash = await bcrypt.hash(password, 10);
@@ -166,10 +166,8 @@ app.get("/api/search", requireAuth, async (req, res) => {
   );
   const baseIndex = 5;
 
-  // Determinar si es temporada alta o baja según el mes
-  console.log("Mes seleccionado:", selectedMonth);
-  const month = parseInt(selectedMonth); // Esto da 0 para enero, 1 para febrero...
-  const highSeasonMonths = [6, 7, 11]; // julio, agosto, diciembre
+  const month = parseInt(selectedMonth);
+  const highSeasonMonths = [0, 6, 7, 11];
   const isHighSeason = highSeasonMonths.includes(month);
 
   const results = [];
@@ -189,7 +187,7 @@ app.get("/api/search", requireAuth, async (req, res) => {
 
     let lodgingPerDay = 100 * costFactor * 1.1 + 50; // 50€ base + ajuste por coste de vida
 
-    // Aplicar lógica de temporada
+    // Aplicar lógica de temporada alta/baja
     if (isHighSeason) {
       lodgingPerDay *= 1.8;
     } else {
