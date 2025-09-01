@@ -66,32 +66,32 @@ cd mi-viajes
 
 - Instalar dependencias
 
-# Backend
+  - Backend
 
 cd server
 npm install
 
-# Frontend
+- Frontend
 
 cd ../client
 npm install
 
 - Configurar el archivo .env en la carpeta server con las variables necesarias
 
-DATABASE_URL=postgres://usuario:contraseña@localhost:5432/nombre_bd
-PIXABAY_API_KEY=tu_api_key
+DB_HOST=localhost
+DB_NAME=travel_db
+DB_USER=tfg_user
+DB_PASSWORD=root
+PORT=5002
 
-- Poblar la base de datos con los datos iniciales
-
-node seed/seedDestinations.js
-node seed/seedCostIndex.js
-
-- Ejecutar el proyecto
+SESSION_SECRET=?fc7821fguyd
 
 # Backend
 
 cd server
-npm run dev
+node seedDestinations.js
+node seedBigMac.js
+node server.js
 
 # Frontend
 
