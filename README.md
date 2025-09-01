@@ -66,7 +66,7 @@ cd mi-viajes
 
 - Instalar dependencias
 
-  - Backend
+- Backend
 
 cd server
 npm install
