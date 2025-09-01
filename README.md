@@ -45,25 +45,26 @@ Características
   ├── README.md
   └── package.json
 
-- Instalación y ejecución local
-  Requisitos
+# Instalación y ejecución local
 
-Node.js (v18 o superior)
+- Requisitos
 
-PostgreSQL
+  - Node.js (v18 o superior)
 
-Clave API de Pixabay
+  - PostgreSQL
 
-(Opcional) Clave API de Skyscanner
+  - Clave API de Pixabay
 
-Pasos
+  - (Opcional) Clave API de Skyscanner
 
-Clonar el repositorio
+# Pasos
+
+- Clonar el repositorio
 
 git clone https://github.com/charlieeglz/mi-viajes
 cd mi-viajes
 
-Instalar dependencias
+- Instalar dependencias
 
 # Backend
 
@@ -75,17 +76,17 @@ npm install
 cd ../client
 npm install
 
-Configurar el archivo .env en la carpeta server con las variables necesarias
+- Configurar el archivo .env en la carpeta server con las variables necesarias
 
 DATABASE_URL=postgres://usuario:contraseña@localhost:5432/nombre_bd
 PIXABAY_API_KEY=tu_api_key
 
-Poblar la base de datos con los datos iniciales
+- Poblar la base de datos con los datos iniciales
 
 node seed/seedDestinations.js
 node seed/seedCostIndex.js
 
-Ejecutar el proyecto
+- Ejecutar el proyecto
 
 # Backend
 
@@ -97,17 +98,17 @@ npm run dev
 cd ../client
 npm start
 
-Mejoras previstas
+# Mejoras previstas
 
-Posibilidad de guardar destinos favoritos
+- Posibilidad de guardar destinos favoritos
 
-Nuevos filtros por tipo de viaje, clima o idioma
+- Nuevos filtros por tipo de viaje, clima o idioma
 
-Autenticación OAuth
+- Autenticación OAuth
 
-Traducción de la interfaz a varios idiomas
+- Traducción de la interfaz a varios idiomas
 
-Autor
+# Autor
 
 Carlos González Portela
 Este proyecto forma parte de mi portfolio personal como desarrollador full-stack.
