@@ -185,11 +185,11 @@ app.get("/api/search", requireAuth, async (req, res) => {
       ? indexMap[dest.country] / baseIndex
       : 1;
 
-    let lodgingPerDay = 100 * costFactor * 1.1 + 50; // 50€ base + ajuste por coste de vida
+    let lodgingPerDay = 70 * costFactor * 1.1; // auste por coste de vida
 
     // Aplicar lógica de temporada alta/baja
     if (isHighSeason) {
-      lodgingPerDay *= 1.8;
+      lodgingPerDay *= 1.6;
     } else {
       lodgingPerDay *= 0.8;
     }
