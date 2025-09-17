@@ -4,29 +4,21 @@ const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
 const { Sequelize, DataTypes } = require("sequelize");
-const db = require("./db");
 const coordinates = require("./utils/coordinates");
 const haversine = require("./utils/haversine");
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-const authRoutes = require("./routes/auth");
-const requireAuth = (req, res, next) => {
-  if (req.session.userId) return next();
-  res.status(401).send({ error: "No autorizado" });
-};
-
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:5003",
+    origin: "http://localhost:3000", // Ajusta si es necesario
     credentials: true,
   })
 );
 app.use(express.json());
 app.set("trust proxy", 1);
-
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -40,20 +32,24 @@ app.use(
   })
 );
 
-// Rutas
-app.use("/api/auth", authRoutes);
+// Autenticación
+const requireAuth = (req, res, next) => {
+  if (req.session.userId) return next();
+  res.status(401).send({ error: "No autorizado" });
+};
 
-// Conexión Sequelize
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST || "localhost",
-    dialect: "mysql",
-    logging: false,
-  }
-);
+// Conexión Sequelize con PostgreSQL
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "postgres",
+  protocol: "postgres",
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+  logging: false,
+});
 
 // Modelos
 const Destination = sequelize.define(
@@ -90,40 +86,32 @@ const User = sequelize.define(
   }
 );
 
-// Sincronizar
-sequelize
-  .sync()
-  .then(() => {
-    console.log("Base de datos sincronizada");
-    app.listen(port, () => console.log(`Servidor en puerto ${port}`));
-  })
-  .catch((err) => console.error("Error sincronizando BD:", err));
-
-// Rutas adicionales
+// Rutas de autenticación
 app.post("/api/auth/register", async (req, res) => {
   const { email, password } = req.body;
-  const hash = await bcrypt.hash(password, 10);
-  await db.query("INSERT INTO users (email, password_hash) VALUES (?, ?)", [
-    email,
-    hash,
-  ]);
-  res.status(201).send({ message: "Usuario registrado" });
+  try {
+    const hash = await bcrypt.hash(password, 10);
+    await User.create({ email, password_hash: hash });
+    res.status(201).send({ message: "Usuario registrado" });
+  } catch (err) {
+    res.status(500).send({ error: "Error al registrar usuario" });
+  }
 });
 
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
-  const [rows] = await db.query(
-    "SELECT id, password_hash FROM users WHERE email = ?",
-    [email]
-  );
-  const user = rows[0];
-  if (!user) return res.status(401).send({ error: "Credenciales inválidas" });
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).send({ error: "Credenciales inválidas" });
 
-  const ok = await bcrypt.compare(password, user.password_hash);
-  if (!ok) return res.status(401).send({ error: "Credenciales inválidas" });
+    const ok = await bcrypt.compare(password, user.password_hash);
+    if (!ok) return res.status(401).send({ error: "Credenciales inválidas" });
 
-  req.session.userId = user.id;
-  res.send({ message: "Sesión iniciada" });
+    req.session.userId = user.id;
+    res.send({ message: "Sesión iniciada" });
+  } catch (err) {
+    res.status(500).send({ error: "Error al iniciar sesión" });
+  }
 });
 
 app.post("/api/auth/logout", (req, res) => {
@@ -134,11 +122,17 @@ app.post("/api/auth/logout", (req, res) => {
 });
 
 app.get("/api/auth/profile", requireAuth, async (req, res) => {
-  const [rows] = await db.query("SELECT id, email FROM users WHERE id = ?", [
-    req.session.userId,
-  ]);
-  res.send(rows[0]);
+  try {
+    const user = await User.findByPk(req.session.userId, {
+      attributes: ["id", "email"],
+    });
+    res.send(user);
+  } catch (err) {
+    res.status(500).send({ error: "Error al obtener perfil" });
+  }
 });
+
+// Ruta principal de búsqueda
 app.get("/api/search", requireAuth, async (req, res) => {
   const { origin, budget, daysMin, daysMax, selectedMonth } = req.query;
 
@@ -184,25 +178,20 @@ app.get("/api/search", requireAuth, async (req, res) => {
     const costFactor = indexMap[dest.country]
       ? indexMap[dest.country] / baseIndex
       : 1;
+    let lodgingPerDay = 70 * costFactor * 1.1;
 
-    let lodgingPerDay = 70 * costFactor * 1.1; // auste por coste de vida
-
-    // Aplicar lógica de temporada alta/baja
-    if (isHighSeason) {
-      lodgingPerDay *= 1.6;
-    } else {
-      lodgingPerDay *= 0.8;
-    }
+    if (isHighSeason) lodgingPerDay *= 1.6;
+    else lodgingPerDay *= 0.8;
 
     const lodgingMin = Number(daysMin) * lodgingPerDay;
     const lodgingMax = Number(daysMax) * lodgingPerDay;
-
     const minCost = transportCost + lodgingMin;
     const maxCost = transportCost + lodgingMax;
-    const avgCost = (minCost + maxCost) / 2;
-    const avgDays = (Number(daysMin) + Number(daysMax)) / 2;
 
     if (maxCost > Number(budget)) continue;
+
+    const avgCost = (minCost + maxCost) / 2;
+    const avgDays = (Number(daysMin) + Number(daysMax)) / 2;
 
     results.push({
       id: dest.id,
@@ -219,3 +208,12 @@ app.get("/api/search", requireAuth, async (req, res) => {
 
   return res.json(results);
 });
+
+// Arrancar el servidor después de sincronizar Sequelize
+sequelize
+  .sync()
+  .then(() => {
+    console.log("Base de datos sincronizada");
+    app.listen(port, () => console.log(`Servidor en puerto ${port}`));
+  })
+  .catch((err) => console.error("Error sincronizando BD:", err));

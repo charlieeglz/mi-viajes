@@ -76,16 +76,6 @@ npm install
 cd ../client
 npm install
 
-- Configurar el archivo .env en la carpeta server con las variables necesarias
-
-DB_HOST=localhost
-DB_NAME=travel_db
-DB_USER=tfg_user
-DB_PASSWORD=root
-PORT=5002
-
-SESSION_SECRET=?fc7821fguyd
-
 # Backend
 
 cd server

@@ -1,19 +1,27 @@
 version: "3.8"
-
 services:
   db:
-    image: mysql:8.0
-    container_name: travel_db
+    image: postgres:15
     restart: always
     environment:
-      MYSQL_DATABASE: travel_db
-      MYSQL_USER: tfg_user
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      POSTGRES_DB: mi_bd
+      POSTGRES_USER: mi_usuario
+      POSTGRES_PASSWORD: mi_password
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+  backend:
+    build: ./server
+    environment:
+      DB_NAME: mi_bd
+      DB_USER: mi_usuario
+      DB_PASSWORD: mi_password
+      DB_HOST: db
+    depends_on:
+      - db
+    ports:
+      - "5000:5000"
 
 volumes:
-  mysql_data:
+  postgres_data:
