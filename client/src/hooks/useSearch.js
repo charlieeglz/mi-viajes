@@ -19,7 +19,7 @@ export function useSearch(filters = {}) {
         selectedMonth !== ""
     ),
     queryFn: async () => {
-      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+      const baseUrl = "https://mi-viajes-back.onrender.com"; // tu backend real
 
       const queryString = new URLSearchParams({
         origin,
@@ -43,6 +43,6 @@ export function useSearch(filters = {}) {
 
       return res.json();
     },
-    staleTime: 1000 * 60 * 5, // 5 minutos
+    staleTime: 1000 * 60 * 5,
   });
 }
