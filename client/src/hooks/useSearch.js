@@ -9,9 +9,6 @@ export function useSearch(filters = {}) {
     selectedMonth = "",
   } = filters;
 
-  // Base URL según entorno: producción o desarrollo
-  const baseUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-
   return useQuery({
     queryKey: ["search", origin, budget, daysMin, daysMax, selectedMonth],
     enabled: Boolean(
@@ -19,19 +16,21 @@ export function useSearch(filters = {}) {
         budget !== "" &&
         daysMin !== "" &&
         daysMax !== "" &&
-        selectedMonth
+        selectedMonth !== ""
     ),
     queryFn: async () => {
-      const url = `${baseUrl}/api/search?${new URLSearchParams({
+      const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+      const queryString = new URLSearchParams({
         origin,
         budget: String(budget),
         daysMin: String(daysMin),
         daysMax: String(daysMax),
-        selectedMonth,
-      }).toString()}`;
+        selectedMonth: String(selectedMonth),
+      }).toString();
 
-      const res = await fetch(url, {
-        credentials: "include", // mantiene las cookies para la sesión
+      const res = await fetch(`${baseUrl}/api/search?${queryString}`, {
+        credentials: "include",
       });
 
       if (!res.ok) {
