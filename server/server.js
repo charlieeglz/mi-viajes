@@ -133,7 +133,7 @@ app.get("/api/auth/profile", requireAuth, async (req, res) => {
 });
 
 // Ruta principal de búsqueda
-app.get("/api/search", requireAuth, async (req, res) => {
+app.get("/api/search", async (req, res) => {
   const { origin, budget, daysMin, daysMax, selectedMonth } = req.query;
 
   if (
